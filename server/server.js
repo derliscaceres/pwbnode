@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
-const db = require("./app/models");
+const db = require("./app/models/index.js");
 
 /* Sincronización de modelos con la base de datos */
 db.sequelize.sync().then(() => {
