@@ -14,7 +14,7 @@ db.sequelize.sync().then(() => {
 
 /* Configuración de CORS */
 const corsOptions = {
-  origin: "http://localhost:9091", // Cambia esta URL según tu configuración de cliente
+  origin: "http://localhost:3000", // Cambia esta URL según tu configuración de cliente
 };
 app.use(cors(corsOptions));
 

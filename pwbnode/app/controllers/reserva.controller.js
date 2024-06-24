@@ -18,6 +18,7 @@ exports.crear = async (req, res) => {
 /* Obtener todas las reservas */
 exports.listar = async (req, res) => {
   const { RestauranteId, fecha, ClienteId } = req.query;
+  console.log(RestauranteId, fecha, ClienteId);
 
   try {
     // Crear objeto de condiciones de búsqueda
