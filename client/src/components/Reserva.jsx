@@ -95,7 +95,7 @@ const Reserva = () => {
                             navigate('/exito')
                         })
                         .catch( err => 
-                            console.log(err)
+                            setError2(err.response.data.message)
                         )
                 })
                 .catch( error => {
@@ -141,11 +141,12 @@ const Reserva = () => {
 
     return (
         <>
-        <button onClick={e => navigate('/')}>Regresar</button>
-        <form action='submit' style={{width: "100%", margin: "5vw 5vh"}} onSubmit={handleSubmit}>
+        <button className='btn btn-success' onClick={e => navigate('/')}>Regresar</button>
+        <div className='d-flex justify-content-start'>
+        <form className='d-inline w-50 m-3' action='submit' onSubmit={handleSubmit}>
             <div>
-                <label>Restaurante: </label>
-                <select value={restSeleccionado} onChange={e => handleRestChange(e)}>
+                <label className="form-label">Restaurante: </label>
+                <select className="form-select form-select-sm w-50" value={restSeleccionado} onChange={e => handleRestChange(e)}>
                     {
                         restaurante.map( item => (
                             <option key={item.id} value={item.id}>
@@ -155,18 +156,19 @@ const Reserva = () => {
                     }
                 </select>
             </div>
-            <div>
-                <label htmlFor="date-picker">Selecciona una fecha: </label>
+            <div className='mt-1'>
+                <label className="form-label" htmlFor="date-picker">Selecciona una fecha: </label>
                 <input
+                    className="form-control w-50"
                     type="date"
                     id="date-picker"
                     value={fecha}
                     onChange={handleFechaChange}
                 />
             </div>
-            <div>
-                <label>Hora inicio: </label>
-                <select name='hora-inicio' value={horaInicioSeleccionada} onChange={e => handleHoraChange(e)}>
+            <div className='mt-1'>
+                <label className="form-label">Hora inicio: </label>
+                <select className="form-select form-select-sm w-50" name='hora-inicio' value={horaInicioSeleccionada} onChange={e => handleHoraChange(e)}>
                     {
                         horas.map( item => (
                             <option key={item} value={item}>
@@ -176,9 +178,9 @@ const Reserva = () => {
                     }
                 </select>
             </div>
-            <div>
-                <label>Hora fin: </label>
-                <select name='hora-fin' value={horaFinSeleccionada} onChange={e => handleHoraChange(e)}>
+            <div className='mt-1'>
+                <label className="form-label">Hora fin: </label>
+                <select className="form-select form-select-sm w-50" name='hora-fin' value={horaFinSeleccionada} onChange={e => handleHoraChange(e)}>
                     {
                         horas.map( item => (
                             <option key={item} value={item}>
@@ -195,15 +197,16 @@ const Reserva = () => {
                     ""
             }
             <div>
-                <button type='submit'>
+                <button className="btn btn-primary mt-3" type='submit'>
                     Buscar Mesas
                 </button>
             </div>
         </form>
         {
             mesas ?
-                <form action="submit"  style={{width: "100%", margin: "5vw 5vh"}} onSubmit={handleSubmitReserva}>
-                    <select value={mesaSeleccionada} onChange={e => setMesaSeleccionada(e.target.value)}>
+                <form className='d-inline w-50 m-3' action="submit" onSubmit={handleSubmitReserva}>
+                    <label className='form-label'>Mesas Disponibles</label>
+                    <select className="form-select form-select-sm w-50" value={mesaSeleccionada} onChange={e => setMesaSeleccionada(e.target.value)}>
                         {
                             mesas.map( item => 
                                 <option key={item.id} value={item.id}>
@@ -212,30 +215,30 @@ const Reserva = () => {
                             )
                         }
                     </select>
-                    <div>
-                        <label htmlFor="capacidad">Cantidad de Comensales: </label>
-                        <input type="text" name="capacidad" value={cantidad} onChange={ e => setCantidad(e.target.value) }/>
+                    <div className='mt-2'>
+                        <label className="form-label" htmlFor="capacidad">Cantidad de Comensales: </label>
+                        <input className="form-control w-50" type="text" name="capacidad" value={cantidad} onChange={ e => setCantidad(e.target.value) }/>
                     </div>
-                    <div>
-                        <label htmlFor="cliente">Cédula Cliente: </label>
-                        <input name='cliente' type="text" value={cliente} onChange={ e => setCliente(e.target.value)}/>
+                    <div className='mt-2'>
+                        <label className="form-label" htmlFor="cliente">Cédula Cliente: </label>
+                        <input className="form-control w-50" name='cliente' type="text" value={cliente} onChange={ e => setCliente(e.target.value)}/>
                     </div>
                     {
                         noExiste ?
                             <div>
-                                <label style={{display: "block"}}>Ingrese datos del nuevo Cliente:</label>
+                                <label className="form-label" style={{display: "block"}}>Ingrese datos del nuevo Cliente:</label>
                                 <div>
-                                    <label htmlFor="nombre">Nombre: </label>
-                                    <input name='nombre' type='text' value={nombre} onChange={e => setNombre(e.target.value)}/>
+                                    <label className="form-label" htmlFor="nombre">Nombre: </label>
+                                    <input className="form-control w-50" name='nombre' type='text' value={nombre} onChange={e => setNombre(e.target.value)}/>
                                 </div>
                                 <div>
-                                    <label htmlFor="apellido">Apellido: </label>
-                                    <input name='apellido' type='text' value={apellido} onChange={e => setApellido(e.target.value)}/>
+                                    <label className="form-label" htmlFor="apellido">Apellido: </label>
+                                    <input className="form-control w-50" name='apellido' type='text' value={apellido} onChange={e => setApellido(e.target.value)}/>
                                 </div>
-                                <button type='submit'>Guardar Cliente y Reservar</button>
+                                <button className="btn btn-primary mt-3" type='submit'>Guardar Cliente y Reservar</button>
                             </div>
                             :
-                            <button type='submit'>Reservar</button>
+                            <button className="btn btn-primary mt-3" type='submit'>Reservar</button>
                     }
                     {
                         error2 ?
@@ -247,6 +250,7 @@ const Reserva = () => {
                 :
                 ""
         }
+        </div>
         </>
     )
 }
