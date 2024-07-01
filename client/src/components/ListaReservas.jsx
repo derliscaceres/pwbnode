@@ -36,7 +36,6 @@ const ListaReservas = () => {
                     .then(res => {
                         axios.get('http://localhost:9090/api/reserva?RestauranteId=' + restSeleccionado + '&fecha=' + fecha + "&ClienteId=" + res.data.id)
                             .then(res => {
-                                console.log(res.data);
                                 setReservas(res.data)
                             })
                             .catch(error => {
@@ -46,7 +45,6 @@ const ListaReservas = () => {
             } else {
                 axios.get('http://localhost:9090/api/reserva?RestauranteId=' + restSeleccionado + '&fecha=' + fecha)
                     .then(res => {
-                        console.log(res);
                         setReservas(res.data)
                     })
                     .catch(error => {
@@ -58,11 +56,11 @@ const ListaReservas = () => {
 
     return (
         <>
-            <button onClick={e => navigate('/')}>Regresar</button>
-            <form action='submit' style={{ width: "100%", margin: "5vw 5vh" }} onSubmit={handleSubmit}>
+            <button className='btn btn-success' onClick={e => navigate('/')}>Regresar</button>
+            <form className='ms-5 mt-5' action='submit' onSubmit={handleSubmit}>
                 <div>
-                    <label>Restaurante: </label>
-                    <select value={restSeleccionado} onChange={e => setRestSeleccionado(e.target.value)}>
+                    <label className="form-label">Restaurante: </label>
+                    <select className="form-select form-select-sm w-25" value={restSeleccionado} onChange={e => setRestSeleccionado(e.target.value)}>
                         {
                             restaurante.map(item => (
                                 <option key={item.id} value={item.id}>
@@ -72,21 +70,22 @@ const ListaReservas = () => {
                         }
                     </select>
                 </div>
-                <div>
-                    <label htmlFor="date-picker">Selecciona una fecha: </label>
+                <div className='mt-2'>
+                    <label className="form-label" htmlFor="date-picker">Selecciona una fecha: </label>
                     <input
+                        className="form-control w-25"
                         type="date"
                         id="date-picker"
                         value={fecha}
                         onChange={e => setFecha(e.target.value)}
                     />
                 </div>
-                <div>
-                    <label htmlFor="cliente">Cédula Cliente(Opcional): </label>
-                    <input name='cliente' type="text" value={cliente} onChange={e => setCliente(e.target.value)} />
+                <div className='mt-2'>
+                    <label className="form-label" htmlFor="cliente">Cédula Cliente(Opcional): </label>
+                    <input className="form-control w-25" name='cliente' type="text" value={cliente} onChange={e => setCliente(e.target.value)} />
                 </div>
                 <div>
-                    <button type='submit'>
+                    <button className='btn btn-primary mt-3' type='submit'>
                         Buscar Reservas
                     </button>
                 </div>
@@ -99,7 +98,7 @@ const ListaReservas = () => {
             </form>
             {
                 reservas ?
-                    <table className="mx-5 table table-striped table-bordered">
+                    <table className="mt-5 mx-5 table table-striped table-bordered">
                         <thead className="thead-dark">
                             <tr>
                                 <th>ID</th>
