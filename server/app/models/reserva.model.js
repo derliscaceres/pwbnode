@@ -60,19 +60,22 @@ module.exports = (sequelize, Sequelize) => {
   Reserva.addHook("beforeValidate", (reserva, options) => {
     const horaInicio = new Date(`1970-01-01T${reserva.horaInicio}Z`);
     const horaFin = new Date(`1970-01-01T${reserva.horaFin}Z`);
-    
+
     if (reserva.horaInicio >= reserva.horaFin) {
       throw new Error("La hora de fin debe ser mayor que la hora de inicio");
     }
-    
+
     const horaInicioHoras = horaInicio.getUTCHours();
     const horaFinHoras = horaFin.getUTCHours();
 
-    if ((horaInicioHoras >= 12 && horaInicioHoras <= 14 && horaFinHoras > 15) ||
-        (horaInicioHoras >= 19 && horaInicioHoras <= 22 && horaFinHoras > 23)) {
-      throw new Error('La hora de fin no es válida para la hora de inicio dada');
+    if (
+      (horaInicioHoras >= 12 && horaInicioHoras <= 14 && horaFinHoras > 15) ||
+      (horaInicioHoras >= 19 && horaInicioHoras <= 22 && horaFinHoras > 23)
+    ) {
+      throw new Error(
+        "La hora de fin no es válida para la hora de inicio dada"
+      );
     }
-
   });
 
   return Reserva;

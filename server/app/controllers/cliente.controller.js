@@ -28,7 +28,9 @@ exports.encontrar = async (req, res) => {
   try {
     const cliente = await Cliente.findOne({ where: { cedula: cedula } });
     if (!cliente) {
-      res.status(404).json({ message: `Cliente con cédula ${cedula} no encontrado` });
+      res
+        .status(404)
+        .json({ message: `Cliente con cédula ${cedula} no encontrado` });
     } else {
       res.json(cliente);
     }
@@ -36,7 +38,6 @@ exports.encontrar = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 
 /* Actualizar un cliente por ID */
 exports.modificar = async (req, res) => {

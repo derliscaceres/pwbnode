@@ -79,26 +79,35 @@ exports.eliminar = async (req, res) => {
 /* Encontrar mesas disponibles dado un restaurante, una fecha y un horario */
 exports.mesasDisponibles = async (req, res) => {
   const { RestauranteId, fecha, horaInicio, horaFin } = req.body;
-  
+
   try {
     if (horaInicio >= horaFin) {
-      throw new Error("Horas invalidas")
+      throw new Error("Horas invalidas");
     }
 
     if (!fecha) {
-      throw new Error("Fecha invalida")
+      throw new Error("Fecha invalida");
     }
 
     /* Paso 1: Obtener todas las mesas del restaurante específico */
     const mesasDelRestaurante = await Mesa.findAll({
       where: {
-        RestauranteId: RestauranteId
+        RestauranteId: RestauranteId,
       },
     });
 
     /* Paso 2: Obtener todas las reservas que coincidan con la fecha y el horario especificados */
     const reservasEnHorario = await Reserva.findAll({
-      where: { fecha: fecha, [Op.and]: [ { horaInicio: { [Op.lt]: horaFin, }, horaFin: { [Op.gt]: horaInicio, }, }, ], }, });
+      where: {
+        fecha: fecha,
+        [Op.and]: [
+          {
+            horaInicio: { [Op.lt]: horaFin },
+            horaFin: { [Op.gt]: horaInicio },
+          },
+        ],
+      },
+    });
     /* Paso 3: Excluir las mesas que ya están reservadas en ese horario */
     const mesasReservadasIds = reservasEnHorario.map(
       (reserva) => reserva.MesaId

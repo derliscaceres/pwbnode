@@ -18,7 +18,7 @@ exports.crear = async (req, res) => {
 /* Obtener todas las reservas */
 exports.listar = async (req, res) => {
   const { RestauranteId, fecha, ClienteId } = req.query;
-  console.log(RestauranteId, fecha, ClienteId);
+  //console.log(RestauranteId, fecha, ClienteId);
 
   try {
     // Crear objeto de condiciones de búsqueda
@@ -28,9 +28,9 @@ exports.listar = async (req, res) => {
       // Buscar mesas del restaurante especificado
       const mesasDelRestaurante = await Mesa.findAll({
         where: { RestauranteId: RestauranteId },
-        attributes: ['id']
+        attributes: ["id"],
       });
-      const mesaIds = mesasDelRestaurante.map(mesa => mesa.id);
+      const mesaIds = mesasDelRestaurante.map((mesa) => mesa.id);
 
       // Agregar condición para filtrar por MesaId
       condiciones.MesaId = { [Op.in]: mesaIds };
@@ -48,13 +48,13 @@ exports.listar = async (req, res) => {
     const reservas = await Reserva.findAll({
       where: condiciones,
       order: [
-        ['horaInicio', 'ASC'],
-        ['MesaId', 'ASC']
+        ["horaInicio", "ASC"],
+        ["MesaId", "ASC"],
       ],
       include: [
-        { model: Mesa, attributes: ['nombre'] }, // Incluir detalles de Mesa
-        { model: Cliente, attributes: ['nombre', 'apellido'] } // Incluir detalles de Cliente
-      ]
+        { model: Mesa, attributes: ["nombre"] }, // Incluir detalles de Mesa
+        { model: Cliente, attributes: ["nombre", "apellido"] }, // Incluir detalles de Cliente
+      ],
     });
 
     res.json(reservas);

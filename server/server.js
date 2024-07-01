@@ -32,6 +32,11 @@ require("./app/routes/cliente.routes.js")(app); // Rutas para Cliente
 require("./app/routes/mesa.routes.js")(app); // Rutas para Mesa
 require("./app/routes/reserva.routes.js")(app); // Rutas para Reserva
 require("./app/routes/restaurante.routes.js")(app); // Rutas para Restaurante
+require("./app/routes/categoria.routes.js")(app); // Rutas para Categoría
+require("./app/routes/producto.routes.js")(app); // Rutas para Detalle
+require("./app/routes/consumo.routes.js")(app); // Rutas para Consumo
+require("./app/routes/detalle.routes.js")(app); // Rutas para Detalle
+
 
 /* Puerto de escucha */
 const PORT = process.env.PORT || 9090;

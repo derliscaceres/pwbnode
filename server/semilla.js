@@ -5,6 +5,11 @@ const Cliente = db.Cliente;
 const Mesa = db.Mesa;
 const Restaurante = db.Restaurante;
 const Reserva = db.Reserva;
+const Categoria = db.Categoria;
+const Producto = db.Producto;
+const Consumo = db.Consumo;
+const Detalle = db.Detalle;
+
 
 async function populateDatabase() {
   try {
@@ -73,9 +78,35 @@ async function populateDatabase() {
       { fecha: "2024-06-27", horaInicio: "20:00:00", horaFin: "21:00:00", cantidad: 5, ClienteId: clienteIds[2], MesaId: mesasIds[14] },
       { fecha: "2024-06-27", horaInicio: "21:00:00", horaFin: "22:00:00", cantidad: 3, ClienteId: clienteIds[3], MesaId: mesasIds[2] },
     ];
-
     await Reserva.bulkCreate(reservasData);
 
+    const categoriasData = [
+      { nombre: "Entrada" },
+      { nombre: "Principal" },
+      { nombre: "Postre" },
+      { nombre: "Bebida" },
+    ];
+    const categorias = await Categoria.bulkCreate(categoriasData, { returning: true });
+
+    const productosData = [
+      { nombre: "Papas fritas pequeñas",precio: 5000, categoriaId: categorias[0].id },
+      { nombre: "Papas fritas medianas",precio: 7000, categoriaId: categorias[0].id },
+      { nombre: "Milanesa de pollo", precio: 15000, categoriaId: categorias[1].id },
+      { nombre: "Milanesa de carne",precio: 15000, categoriaId: categorias[1].id },
+      { nombre: "Helado",precio: 11000, categoriaId: categorias[2].id },
+      { nombre: "Ka'i ladrillo",precio: 8000, categoriaId: categorias[2].id },
+      { nombre: "Coca Cola 500ml.", precio: 5000, categoriaId: categorias[3].id },
+      { nombre: "Coca Cola Light 500ml.", precio: 5000, categoriaId: categorias[3].id },
+    ];
+    const productos = await Producto.bulkCreate(productosData, { returning: true });
+
+    const consumosData = [
+      { mesaId: mesas[0].id, clienteId: clientes[0].id },
+      { mesaId: mesas[1].id, clienteId: clientes[1].id },
+      { mesaId: mesas[2].id, clienteId: clientes[2].id },
+    ];
+    const consumos = await Consumo.bulkCreate(consumosData, { returning: true });
+    
     console.log("Datos insertados correctamente");
   } catch (err) {
     console.error("Error al insertar datos:", err);

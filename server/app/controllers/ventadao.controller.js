@@ -9,14 +9,14 @@ exports.create = (req, res) => {
     });
     return;
   }
-  
+
   /* Crea una venta */
   const venta = {
     cliente: req.body.cliente,
     factura: req.body.factura,
     total: req.body.total,
   };
-  
+
   /* Guardamos a la base de datos */
   Ventas.create(venta)
     .then((data) => {
