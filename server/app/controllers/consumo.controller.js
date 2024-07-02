@@ -93,14 +93,10 @@ exports.generarPDF = async (req, res) => {
   try {
     const consumo = await Consumo.findByPk(id);
     if (!consumo) {
-      return res
-        .status(404)
-        .json({ message: `Consumo con id ${id} no encontrado.` });
+      return res.status(404).json({ message: `Consumo con id ${id} no encontrado.` });
     }
     if (consumo.estaAbierto) {
-      return res
-        .status(404)
-        .json({ message: `Consumo con id ${id} aún está abierto.` });
+      return res.status(404).json({ message: `Consumo con id ${id} aún está abierto.` });
     }
 
     // Traemos los datos para el PDF
@@ -108,18 +104,42 @@ exports.generarPDF = async (req, res) => {
     const mesa = await Mesa.findByPk(consumo.mesaId);
     const cliente = await Cliente.findByPk(consumo.clienteId);
 
-    // Crear un nuevo documento PDF
-    const pdfDoc = new jsPDF();
+    // Formateamos la fecha manualmente
+    const date = new Date(consumo.horaFin);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
+    const year = date.getFullYear();
+    const fechaFormateada = `${day}/${month}/${year}`;
+    
+    const ancho = 80;
+    const largo = 300;
+    // Crear un nuevo documento PDF con un ancho y altura típicos de un ticket
+    const pdfDoc = new jsPDF({
+      unit: 'mm',
+      format: [ancho, largo]  // Ancho de 80mm y altura de 297mm (A4)
+    });
 
+    // Definir tamaño de texto más pequeño para parecer un ticket
+    const textSize = 8;
+    pdfDoc.setFontSize(textSize);
+    pdfDoc.setFont('Courier', 'normal');
+    const espaciado = textSize/2;
+    tabulado = 1
     // Definir contenido del documento PDF
-    pdfDoc.text(`Fecha: ${consumo.horaFin}`, 50, 50);
-    pdfDoc.text(`Consumo: ${consumo.id}`, 50, 60);
-    pdfDoc.text(`Cliente: ${cliente.apellido}, ${cliente.nombre}`, 50, 70);
-    pdfDoc.text(`Documento: ${cliente.cedula}`, 50, 80);
-    pdfDoc.text(`Mesa: ${mesa.nombre} (${mesa.id})`, 50, 90);
-    pdfDoc.text(`Detalles:`, 50, 100);
+    let yPosition = espaciado;
+    pdfDoc.text(`Fecha: ${fechaFormateada}`, tabulado, yPosition);
+    yPosition += espaciado;
+    pdfDoc.text(`Consumo: ${consumo.id}`, tabulado, yPosition);
+    yPosition += espaciado;
+    pdfDoc.text(`Cliente: ${cliente.apellido}, ${cliente.nombre}`, tabulado, yPosition);
+    yPosition += espaciado;
+    pdfDoc.text(`Documento: ${cliente.cedula}`, tabulado, yPosition);
+    yPosition += espaciado;
+    pdfDoc.text(`Mesa: ${mesa.nombre} (${mesa.id})`, tabulado, yPosition);
+    yPosition += espaciado;
+    pdfDoc.text(`Detalles:`, tabulado, yPosition);
+    yPosition += espaciado;
 
-    let yPosition = 110;
     // Procesar detalles y escribir en el PDF
     for (let i = 0; i < detalles.length; i++) {
       const detalle = detalles[i];
@@ -127,34 +147,30 @@ exports.generarPDF = async (req, res) => {
       const cantidad = parseInt(detalle.cantidad, 10);
       const precio = parseInt(producto.precio, 10);
       const total = cantidad * precio;
-      pdfDoc.text(`- ${producto.nombre}`, 50, yPosition);
-      pdfDoc.text(
-        `${producto.precio} * ${detalle.cantidad} = ${total}`,
-        60,
-        yPosition + 10
-      );
-      yPosition += 20; // Mover hacia abajo para el siguiente detalle
+      pdfDoc.text(`- ${producto.nombre}`, tabulado, yPosition);
+      yPosition += espaciado;
+      pdfDoc.text(`${cantidad} x ${producto.precio} = ${total}`, tabulado, yPosition);
+      yPosition += espaciado;
     }
 
     if (detalles.length === 0) {
-      pdfDoc.text(`No hay detalles para este Consumo.`, 50, yPosition);
-      yPosition += 20;
+      pdfDoc.text(`No hay detalles para este Consumo.`, tabulado, yPosition);
+      yPosition += espaciado;
     }
 
-    pdfDoc.text(`Total: ${consumo.total}`, 50, yPosition);
+    yPosition += espaciado;
+    pdfDoc.text(`Total: ${consumo.total}`, tabulado, yPosition);
 
     // Obtener el documento en formato PDF como ArrayBuffer
-    const pdfBytes = pdfDoc.output("arraybuffer");
+    const pdfBytes = pdfDoc.output('arraybuffer');
 
     // Configurar la respuesta HTTP para descargar el PDF
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=factura_${consumo.id}_${cliente.cedula}.pdf`
-    );
+    res.setHeader("Content-Disposition", "attachment; filename=consumo.pdf");
     res.send(Buffer.from(pdfBytes));
+
   } catch (err) {
-    console.error("Error en generarPDF:", err);
+    console.error('Error en generarPDF:', err);
     res.status(500).json({ message: err.message });
   }
 };
