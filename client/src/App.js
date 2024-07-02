@@ -4,6 +4,8 @@ import Reserva from './components/Reserva';
 import Inicio from './components/Inicio';
 import ListaReservas from './components/ListaReservas';
 import Exito from './components/Exito';
+import Consumo from './components/Consumo';
+import PDFViewerPage from './components/PDFViewerPage';
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
         <Route path='/reserva' element={<Reserva/>}/>
         <Route path='/reserva/ver' element={<ListaReservas/>}/>
         <Route path='/exito' element={<Exito/>}/>
+        <Route path='/consumo' element={<Consumo/>}/>
+        <Route path='/factura' element={<PDFViewerPage/>}/>
       </Routes>
     </BrowserRouter>
   );

@@ -8,6 +8,7 @@ const Inicio = () => {
         <div className='d-flex w-100 justify-content-evenly mt-5'>
             <button className='btn btn-primary mt-5' onClick={()=>navigate('/reserva')}>Generar Reserva</button>
             <button className='btn btn-success mt-5' onClick={()=>navigate('/reserva/ver')}>Ver Reservas</button>
+            <button className='btn btn-success mt-5' onClick={()=>navigate('/consumo')}>Consumo</button>
         </div>
     )
 }
