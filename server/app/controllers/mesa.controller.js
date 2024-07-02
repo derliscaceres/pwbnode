@@ -25,6 +25,20 @@ exports.listar = async (req, res) => {
   }
 };
 
+/* Obtener todas las mesas de un Restaurante especifico */
+exports.listarPorRestaurante = async (req, res) => {
+  const RestauranteId = req.params.id
+
+  try {
+    const mesas = await Mesa.findAll({
+      where: { RestauranteId }
+    });
+    res.json(mesas);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 /* Obtener una mesa por ID */
 exports.encontrar = async (req, res) => {
   const id = req.params.id;

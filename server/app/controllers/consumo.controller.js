@@ -28,6 +28,40 @@ exports.listar = async (req, res) => {
   }
 };
 
+/* Obtener todos los consumos por mesa */
+exports.listarPorMesa = async (req, res) => {
+  const mesaId = req.params.id
+
+  try {
+    const consumos = await Consumo.findAll({
+      where: {
+        mesaId,
+        estaAbierto: true
+      },
+      attributes: ["id","total"],
+      include: [
+        {
+          model: Detalle,
+          attributes: ["cantidad"],
+          include: [
+            {
+              model: Producto,
+              attributes: ["nombre", "precio"]
+            }
+          ]
+        },
+        {
+          model: Cliente,
+          attributes: ["cedula", "nombre", "apellido"]
+        }
+      ]
+    });
+    res.json(consumos);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 /* Obtener un consumo por ID */
 exports.encontrar = async (req, res) => {
   const id = req.params.id;

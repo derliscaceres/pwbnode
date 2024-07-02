@@ -3,6 +3,7 @@ module.exports = (app) => {
   var router = require("express").Router();
   router.post("/", mesa.crear);
   router.get("/", mesa.listar);
+  router.get("/restaurante/:id", mesa.listarPorRestaurante);
   router.get("/:id", mesa.encontrar);
   router.delete("/:id", mesa.eliminar);
   router.put("/:id", mesa.modificar);

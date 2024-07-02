@@ -4,6 +4,7 @@ module.exports = (app) => {
 
   router.post("/", consumo.crear);
   router.get("/", consumo.listar);
+  router.get("/mesa/:id", consumo.listarPorMesa);
   router.get("/:id", consumo.encontrar);
   router.delete("/:id", consumo.eliminar);
   router.put("/:id", consumo.modificar);
